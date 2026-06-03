@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title>{% block title %}School Attendance Portal{% endblock %}</title>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="portal-title">
+            School Attendance Portal
+        </div>
+
+        <div class="nav-links">
+            {% if session.get('logged_in') != 0%}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('student_login') }}">Student Login</a>
+                <a href="{{ url_for('staff_login') }}">Staff Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if session.get('logged_in') == 1 %}
+        <aside class="sidebar">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('timetable') }}">Timetable</a>
+            <a href="{{ url_for('attendance') }}">Attendance</a>
+            <a href="{{ url_for('students') }}">Students</a>
+            <a href="{{ url_for('reports') }}">Reports</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+        </aside>
+    {% endif %}
+
+    {% if session.get('logged_in') == 2 %}
+        <aside class="sidebar">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('attendance') }}">Attendance</a>
+            <a href="{{ url_for('timetable') }}">Timetable</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
+        </aside>
+    {% endif %}
+
+    <main class="content {% if not session.get('logged_in') %}full-width{% endif %}">
+        <div class="page-card">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+</body>
+</html>
