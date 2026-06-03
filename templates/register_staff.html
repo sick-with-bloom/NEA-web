@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>Create Account</h2>
+
+    <form method="POST">
+        <label>Full Name
+            <input type="text" name="name" required>
+        </label>
+        <label>Password
+            <input type="password" name="password" required>
+        </label>
+
+        <label>Choose an option
+            <select name="department">
+                {% for department in departments %}
+                    <option value="{{ department[0] }}">{{ department[1] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+{%  endblock %}

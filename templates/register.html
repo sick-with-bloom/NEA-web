@@ -4,30 +4,9 @@
 <div class="card">
     <h2>Create Account</h2>
 
-    <form method="POST">
-        <label>Full Name</label>
-        <input type="text" name="name" required>
-
-        <label>Password</label>
-        <input type="password" name="password" required>
-
-        <label>Account Type</label>
-
-        <div class="radio-group">
-            <label>
-                <input type="radio" name="type" value="Staff" required>
-                Staff
-            </label>
-
-            <label>
-                <input type="radio" name="type" value="Student">
-                Student
-            </label>
-        </div>
-
-
-        <button type="submit">Register</button>
-    </form>
+    <div class="button-group">
+        <a href="/register/staff" class="btn">Staff</a>
+        <a href="/register/student" class="btn">Student</a>
+    </div>
 </div>
-
-{%  endblock %}
+{% endblock %}
