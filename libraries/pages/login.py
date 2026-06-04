@@ -23,10 +23,11 @@ def login_page():
             print("incorrect username")
             return render_template("login.html")
 
-        from libraries.tools.accounts import login
+        from libraries.tools.admin import login
 
         if login(account_information):
             session["logged_in"] = account_information[2]
+            session["user"] = username
             print(f"logged in as {username}")
             return redirect(url_for("dashboard"))
         else:

@@ -12,7 +12,7 @@ def register_staff_page():
         name = request.form.get("name")
         password = request.form.get("password")
         department_id = request.form.get("department")
-        from libraries.tools.accounts import generate_staff_code, add_new_staff_member
+        from libraries.tools.admin import generate_staff_code, add_new_staff_member
         staff_code = generate_staff_code(name)
         add_new_staff_member([
             request.form.get("name"),
@@ -26,7 +26,7 @@ def register_student_page():
     if request.method == "GET":
         return render_template("register_student.html")
     else:
-        from libraries.tools.accounts import add_new_student
+        from libraries.tools.admin import add_new_student
         student_information = [
             request.form.get("name"),
             request.form.get("date_of_birth"),

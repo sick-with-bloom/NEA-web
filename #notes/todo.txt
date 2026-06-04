@@ -1,0 +1,3 @@
+general staff page that shows all courses across the college
+    can be filtered by department
+        then subject and year

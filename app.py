@@ -15,6 +15,24 @@ def dashboard():
 def attendance():
     return render_template("attendance.html")
 
+@app.route("/courses")
+def courses():
+    if session["logged_in"] != 1:
+        return redirect(url_for("dashboard"))
+    user = session["user"]
+    from libraries.tools.admin import get_courses_by_staff_code, get_courses
+    course_list = get_courses_by_staff_code(user)
+    course_list = get_courses()
+    return render_template("courses.html", course_list = course_list)
+
+@app.route("/courses/<subject>")
+def courses_subject():
+    return
+
+@app.route("/courses/<subject>/<year>")
+def courses_subject_year():
+    return
+
 @app.route("/students")
 def students():
     return render_template("students.html")
@@ -54,6 +72,7 @@ def login():
 @app.route("/logout")
 def logout():
     session["logged_in"] = 0
+    session["user"] = None
     return redirect(url_for("dashboard"))
 
 

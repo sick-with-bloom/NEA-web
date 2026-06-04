@@ -95,3 +95,28 @@ def login(account_information):
         return True
     else:
         return False
+
+def get_subjects_by_staff_code(staff_code):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject_id, subject_name FROM subjects "
+             "WHERE subject.department_id = staff.department_id "
+             "AND staff.staff_code = ?")
+    subjects = execute_query_all(query, (staff_code, ))
+    return subjects
+
+def get_courses():
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject.subject_name, course.year FROM subject, course "
+             "WHERE course.subject_id = subject.subject_id")
+    courses = execute_query_all(query, ())
+    return courses
+
+def get_courses_by_staff_code(staff_code):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject.subject_name, course.year FROM staff, department, subject, course "
+             "WHERE staff.staff_code = ? "
+             "AND staff.department_id = department.department_id "
+             "AND department.department_id = subject.department_id "
+             "AND course.subject_id = subject.subject_id")
+    courses = execute_query_all(query, (staff_code, ))
+    return courses
