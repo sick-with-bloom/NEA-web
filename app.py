@@ -1,5 +1,4 @@
 from flask import Flask, render_template, session, redirect, url_for, request
-import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = ("your-secret-key-here")
@@ -30,62 +29,54 @@ def timetable():
 
 @app.route("/register")
 def register():
-    return render_template("register.html")
+    from libraries.pages.register import register_page
+    return register_page()
 
 @app.route("/register/staff", methods = ["GET","POST"])
 def register_staff():
-    if request.method == "GET":
-        from tools.database import execute_query_all
-        departments = execute_query_all("SELECT * FROM department", ())
-        return render_template("register_staff.html", departments=departments)
-    else:
-        name = request.form.get("name")
-        password = request.form.get("password")
-        department_id = request.form.get("department")
-        from tools.accounts import generate_staff_code, add_new_staff_member
-        staff_code = generate_staff_code(name)
-        add_new_staff_member([
-            staff_code,
-            name,
-            pa
-        ])
-        return redirect(url_for("dashboard"))
+    from libraries.pages.register import register_staff_page
+    return register_staff_page()
 
 @app.route("/register/student", methods = ["GET","POST"])
 def register_student():
-    if request.method == "GET":
-        return render_template("register_student.html")
-    else:
-        name = request.form.get("name")
-        password = request.form.get("password")
-        from tools.accounts import calculate_start_year, generate_next_student_number, add_new_student
-        start_year = calculate_start_year(request.form.get("date_of_birth"))
-        student_number = generate_next_student_number(start_year)
-        student_information = [
-            request.form.get("name"),
-            request.form.get("date_of_birth"),
-            student_number,
-            request.form.get("password")
-        ]
-        add_new_student(student_information)
-        return redirect(url_for("dashboard"))
+    from libraries.pages.register import register_student_page
+    return register_student_page()
 
-@app.route("/staff_login")
-def staff_login():
-    session["logged_in"] = 1
-    return redirect(url_for("dashboard"))
-    #return render_template("staff_login.html")
-
-@app.route("/student_login")
-def student_login():
-    session["logged_in"] = 2
-    return redirect(url_for("dashboard"))
-    #return render_template("student_login.html")
-
-@app.route("/login")
+@app.route("/login", methods = ["GET", "POST"])
 def login():
-    session["logged_in"] = True
-    return redirect(url_for("dashboard"))
+    if request.method == "GET":
+        if session["logged_in"] != 0:
+            return redirect(url_for("dashboard"))
+        else:
+            return render_template("login.html")
+    else:
+        username = request.form.get("username").upper()
+        password = request.form.get("password")
+        account_information = [username, password, 0]
+
+        if len(username) == 3:
+            #staff login
+            print("staff login")
+            account_information[2] = 1
+        elif len(username) == 8:
+            #student login
+            print("student login")
+            account_information[2] = 2
+        else:
+            #incorrect username
+            print("incorrect username")
+            return render_template("login.html")
+
+        from libraries.tools.accounts import login
+
+        if login(account_information):
+            session["logged_in"] = account_information[2]
+            print(f"logged in as {username}")
+            return render_template("dashboard.html")
+        else:
+            print("login failed")
+            return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():

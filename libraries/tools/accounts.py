@@ -8,7 +8,7 @@ def generate_staff_code(staff_name):
 def generate_next_student_number(year):
     start_year = str(year)[-2:]
 
-    from tools.database import execute_query_one
+    from libraries.tools.database import execute_query_one
 
     query = ("SELECT student_number "
              "FROM student "
@@ -30,11 +30,13 @@ def add_new_student(student_information):
     surname = split_name[-1]
     other_names = " ".join(split_name[:-1])
     student_date_of_birth = student_information[1]
-    student_number = student_information[2]
-    student_password = student_information[3]
+    student_password = student_information[2]
 
-    from tools.database import execute_query_add
-    from tools.utils import hash_password
+    start_year = calculate_start_year(student_date_of_birth)
+    student_number = generate_next_student_number(start_year)
+
+    from libraries.tools.database import execute_query_add
+    from libraries.tools.utils import hash_password
 
     query = "INSERT INTO student (student_number, surname, other_names, date_of_birth) VALUES (?, ?, ?, ?)"
     params = (student_number, surname, other_names, student_date_of_birth, )
@@ -56,9 +58,40 @@ def add_new_staff_member(staff_information):
     first_name = split_name[0]
     surname = split_name[-1]
     other_names = " ".join(split_name[:-1])
-    staff_code = f"{first_name[0]}{surname[0]}{surname[-1]}"
+    staff_code = f"{first_name[0]}{surname[0]}{surname[-1]}".upper()
     department_id = staff_information[1]
+    staff_password = staff_information[2]
+
+    from libraries.tools.database import execute_query_add
+    from libraries.tools.utils import hash_password
+
     query = "INSERT INTO staff (staff_code, surname, other_names, department_id) VALUES (?, ?, ?, ?)"
     params = (staff_code, surname, other_names, department_id, )
-    from tools.database import execute_query_add
     execute_query_add(query, params)
+
+    query = "INSERT INTO staff_login (staff_code, password) VALUES (?, ?)"
+    params = (staff_code, hash_password(staff_password),)
+    execute_query_add(query, params)
+
+def login(account_information):
+    username = account_information[0]
+    password = account_information[1]
+    account_type = account_information[2]
+
+    from libraries.tools.database import execute_query_one
+    from libraries.tools.utils import hash_password
+
+    if account_type == 1:
+        query = "SELECT staff_code FROM staff_login WHERE staff_code = ? and password = ?"
+    elif account_type == 2:
+        query = "SELECT student_number FROM student_login WHERE student_number = ? and password = ?"
+    else:
+        print("invalid account type")
+        return False
+
+    success = execute_query_one(query, (username, hash_password(password)))
+
+    if success:
+        return True
+    else:
+        return False
