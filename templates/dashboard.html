@@ -1,7 +1,78 @@
 {% extends 'base.html' %}
 
-{% if not session.get('logged_in') %}
-    <h1>
-        TEST
-    </h1>
+{% block content %}
+
+{% if session.get('logged_in') %}
+    <div class="timetable">
+        <!-- Top-left blank corner -->
+        <div class="header"></div>
+
+        <!-- Period headers -->
+        <div class="header">Period 1</div>
+        <div class="header">Period 2</div>
+        <div class="header">Period 3</div>
+        <div class="header">Period 4</div>
+        <div class="header">Period 5</div>
+        <div class="header">Period 6</div>
+        <div class="header">Period 7</div>
+        <div class="header">Period 8</div>
+
+        <!-- Monday -->
+        <div class="day">Monday</div>
+        <div class="cell c" data-letter="C">C</div>
+        <div class="cell c" data-letter="C">C</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell b" data-letter="B">B</div>
+        <div class="cell b" data-letter="B">B</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell e" data-letter="E">E</div>
+        <div class="cell e" data-letter="E">E</div>
+
+        <!-- Tuesday -->
+        <div class="day">Tuesday</div>
+        <div class="cell f" data-letter="F">F</div>
+        <div class="cell f" data-letter="F">F</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell a" data-letter="A">A</div>
+        <div class="cell d" data-letter="D">D</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell b" data-letter="B">B</div>
+        <div class="cell b" data-letter="B">B</div>
+
+        <!-- Wednesday -->
+        <div class="day">Wednesday</div>
+        <div class="cell d" data-letter="D">D</div>
+        <div class="cell d" data-letter="D">D</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell c" data-letter="C">C</div>
+        <div class="cell e" data-letter="E">E</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell a" data-letter="A">A</div>
+        <div class="cell a" data-letter="A">A</div>
+
+        <!-- Thursday -->
+        <div class="day">Thursday</div>
+        <div class="cell e" data-letter="E">E</div>
+        <div class="cell e" data-letter="E">E</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell b" data-letter="B">B</div>
+        <div class="cell f" data-letter="F">F</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell c" data-letter="C">C</div>
+        <div class="cell c" data-letter="C">C</div>
+
+        <!-- Friday -->
+        <div class="day">Friday</div>
+        <div class="cell a" data-letter="A">A</div>
+        <div class="cell a" data-letter="A">A</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell d" data-letter="D">D</div>
+        <div class="cell d" data-letter="D">D</div>
+        <div class="cell #" data-letter="#">#</div>
+        <div class="cell f" data-letter="F">F</div>
+        <div class="cell f" data-letter="F">F</div>
+
+    </div>
 {% endif %}
+
+{% endblock %}

@@ -1,6 +1,6 @@
 CREATE TABLE `department` (
-  `department_id` int NOT NULL PRIMARY KEY ,
-  `department_name` varchar(45) NOT NULL
+  department_id int NOT NULL PRIMARY KEY ,
+  department_name varchar(45) NOT NULL
 );
 
 CREATE TABLE `student` (

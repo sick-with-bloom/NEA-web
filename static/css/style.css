@@ -245,3 +245,48 @@ body {
 .btn:hover {
     opacity: 0.9;
 }
+
+.timetable {
+    display: grid;
+    grid-template-columns: minmax(80px, 1.5fr) repeat(8, 1fr);
+    width: 100%;
+    max-width: 100%;
+}
+
+.header,
+.day,
+.cell {
+    border: 1px solid #333;
+    padding: 0.5rem;
+    text-align: center;
+    min-height: 3rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cell.a {
+    background: lightgreen;
+}
+
+.cell.b {
+    background: cyan;
+}
+
+.cell.c {
+    background: pink;
+}
+
+.cell.d {
+    background: darkorange;
+}
+
+.cell.e {
+    background: cornflowerblue;
+}
+
+.cell.f {
+    background: yellow;
+}
+
