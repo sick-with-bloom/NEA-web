@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="card">
+        <h2>Login</h2>
+
+        {% for course in course_list %}
+            <form method="POST">
+            <button type="submit" name="test" value={{ course }}>{{ course[0] }} - {{ course[1] }}</button>
+        </form>
+        {% endfor %}
+    </div>
+
+{% endblock %}

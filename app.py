@@ -15,23 +15,33 @@ def dashboard():
 def attendance():
     return render_template("attendance.html")
 
-@app.route("/courses")
+@app.route("/courses", methods = ["POST","GET"])
 def courses():
-    if session["logged_in"] != 1:
+    if request.method == "GET":
+        if session["logged_in"] != 1:
+            return redirect(url_for("dashboard"))
+        user = session["user"]
+        from libraries.tools.admin import get_courses_by_staff_code, get_courses
+        course_list = get_courses_by_staff_code(user)
+        course_list = get_courses()
+        return render_template("course_list.html", course_list = course_list)
+    else:
+        from libraries.tools.admin import get_classes_by_course
+        print(request.form.get("test"))
         return redirect(url_for("dashboard"))
-    user = session["user"]
-    from libraries.tools.admin import get_courses_by_staff_code, get_courses
-    course_list = get_courses_by_staff_code(user)
-    course_list = get_courses()
-    return render_template("courses.html", course_list = course_list)
 
-@app.route("/courses/<subject>")
-def courses_subject():
-    return
 
-@app.route("/courses/<subject>/<year>")
-def courses_subject_year():
-    return
+@app.route("/courses/subject=<subject_id>" ,methods = ["POST","GET"])
+def courses_subject(subject_id):
+    from libraries.tools.admin import get_courses_by_subject_id
+    course_list = get_courses_by_subject_id(subject_id)
+    return render_template("course_list.html", course_list = course_list)
+
+@app.route("/courses/subject=<subject_id>/year=<year>", methods = ["POST","GET"])
+def courses_subject_year(subject_id, year):
+    from libraries.tools.admin import get_courses_by_subject_id_and_year
+    course_list = get_courses_by_subject_id_and_year(subject_id, year)
+    return render_template("course_list.html", course_list=course_list)
 
 @app.route("/students")
 def students():

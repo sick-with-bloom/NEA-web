@@ -98,7 +98,7 @@ def login(account_information):
 
 def get_subjects_by_staff_code(staff_code):
     from libraries.tools.database import execute_query_all
-    query = ("SELECT subject_id, subject_name FROM subjects "
+    query = ("SELECT subject_id, subject_name FROM subject, staff "
              "WHERE subject.department_id = staff.department_id "
              "AND staff.staff_code = ?")
     subjects = execute_query_all(query, (staff_code, ))
@@ -106,17 +106,49 @@ def get_subjects_by_staff_code(staff_code):
 
 def get_courses():
     from libraries.tools.database import execute_query_all
-    query = ("SELECT subject.subject_name, course.year FROM subject, course "
+    query = ("SELECT subject.subject_name, course.year "
+             "FROM subject, course "
              "WHERE course.subject_id = subject.subject_id")
     courses = execute_query_all(query, ())
     return courses
 
 def get_courses_by_staff_code(staff_code):
     from libraries.tools.database import execute_query_all
-    query = ("SELECT subject.subject_name, course.year FROM staff, department, subject, course "
+    query = ("SELECT subject.subject_name, course.year "
+             "FROM staff, department, subject, course "
              "WHERE staff.staff_code = ? "
              "AND staff.department_id = department.department_id "
              "AND department.department_id = subject.department_id "
              "AND course.subject_id = subject.subject_id")
     courses = execute_query_all(query, (staff_code, ))
     return courses
+
+def get_courses_by_subject_id(subject_id):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject.subject_name, course.year "
+             "FROM course, subject "
+             "WHERE course.subject_id = subject.subject_id "
+             "AND subject.subject_id = ?")
+    courses = execute_query_all(query, (subject_id, ))
+    return courses
+
+def get_courses_by_subject_id_and_year(subject_id, year):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject.subject_name, course.year "
+             "FROM course, subject "
+             "WHERE course.subject_id = subject.subject_id "
+             "AND subject.subject_id = ? "
+             "AND course.year = ?")
+    courses = execute_query_all(query, (subject_id, year, ))
+    return courses
+
+def get_classes_by_course(subject_id, year):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT subject.subject_name, class.block, course.year "
+             "FROM class, course, subject "
+             "WHERE class.course_id = course.course_id "
+             "AND course.subject_id = subject.subject_id "
+             "AND subject.subject_id = ? "
+             "AND course.year = ?")
+    classes = execute_query_all(query, (subject_id, year, ))
+    return classes
