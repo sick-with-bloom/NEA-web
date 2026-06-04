@@ -106,7 +106,7 @@ def get_subjects_by_staff_code(staff_code):
 
 def get_courses():
     from libraries.tools.database import execute_query_all
-    query = ("SELECT subject.subject_name, course.year "
+    query = ("SELECT course.course_id, subject.subject_name, course.year "
              "FROM subject, course "
              "WHERE course.subject_id = subject.subject_id")
     courses = execute_query_all(query, ())
