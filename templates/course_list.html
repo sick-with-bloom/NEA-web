@@ -5,10 +5,23 @@
     <div class="card">
         <h2>Login</h2>
 
+        <form>
+            <label>Search by subject</label>
+        </form>
+
+        <br/>
+
+        <form>
+            <label>Search by year</label>
+        </form>
+
+        <br/>
+
         {% for course in course_list %}
             <form method="POST">
-            <button type="submit" name="test" value={{ course[0] }}>{{ course[1] }} - {{ course[2] }}</button>
-        </form>
+                <button type="submit" name="course_id" value={{ course[0] }}>{{ course[1] }} - {{ course[2] }}</button>
+            </form>
+            <br/>
         {% endfor %}
     </div>
 

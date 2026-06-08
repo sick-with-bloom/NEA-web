@@ -142,13 +142,29 @@ def get_courses_by_subject_id_and_year(subject_id, year):
     courses = execute_query_all(query, (subject_id, year, ))
     return courses
 
-def get_classes_by_course(subject_id, year):
+def get_classes_by_course(course_id):
     from libraries.tools.database import execute_query_all
     query = ("SELECT subject.subject_name, class.block, course.year "
              "FROM class, course, subject "
              "WHERE class.course_id = course.course_id "
              "AND course.subject_id = subject.subject_id "
-             "AND subject.subject_id = ? "
-             "AND course.year = ?")
-    classes = execute_query_all(query, (subject_id, year, ))
+             "AND course.course_id = ?")
+    classes = execute_query_all(query, (course_id, ))
     return classes
+
+def get_students_by_course(course_id):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT * FROM student, enrolment, class "
+             "WHERE student.student_number = enrolment.student_number "
+             "AND enrolment.class_id = class.class_id "
+             "AND class.course_id = ?")
+    students = execute_query_all(query, (course_id, ))
+    return students
+
+def add_new_class(class_information):
+    from libraries.tools.database import execute_query_add
+    block = class_information[0]
+    course_id = class_information[1]
+    query = ("INSERT INTO class (block, course_id) "
+             "VALUES (?, ?)")
+    execute_query_add(query, (block, course_id, ))

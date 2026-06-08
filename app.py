@@ -27,8 +27,25 @@ def courses():
         return render_template("course_list.html", course_list = course_list)
     else:
         from libraries.tools.admin import get_classes_by_course
-        print(request.form.get("test"))
-        return redirect(url_for("dashboard"))
+        course_id = request.form.get("course_id")
+        redirect_url = f"/courses/id={course_id}"
+        return redirect(redirect_url)
+        #return redirect(url_for("dashboard"))
+
+@app.route("/classes/new/course=<course_id>", methods=["GET","POST"])
+def new_class(course_id):
+    if request.method == "GET":
+        return render_template("class_new.html", course_id = course_id)
+    else:
+        block = request.form.get("block")
+
+        from libraries.tools.admin import add_new_class
+
+        add_new_class([block, course_id])
+
+        redirect_url = f"/courses/id={course_id}"
+        return redirect(redirect_url)
+
 
 
 @app.route("/courses/subject=<subject_id>" ,methods = ["POST","GET"])
@@ -42,6 +59,13 @@ def courses_subject_year(subject_id, year):
     from libraries.tools.admin import get_courses_by_subject_id_and_year
     course_list = get_courses_by_subject_id_and_year(subject_id, year)
     return render_template("course_list.html", course_list=course_list)
+
+@app.route("/courses/id=<course_id>")
+def course(course_id):
+    from libraries.tools.admin import get_classes_by_course, get_students_by_course
+    class_list = get_classes_by_course(course_id)
+    student_list = get_students_by_course(course_id)
+    return render_template("course.html", class_list=class_list, student_list=student_list, course_id = course_id)
 
 @app.route("/students")
 def students():

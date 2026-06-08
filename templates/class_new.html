@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="card">
+        <h2>Create New Class</h2>
+
+        <form method="POST">
+            <label>
+                Course Code: {{ course_id }}
+            </label>
+
+            <label>Block
+                <select name="block">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                </select>
+            </label>
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</div>
+
+{%  endblock %}

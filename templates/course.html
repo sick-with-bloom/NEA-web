@@ -3,21 +3,28 @@
 {% block content %}
 
     <div class="card">
-        <h2>Login</h2>
+        <h2>Classes</h2>
 
         {% for class in class_list %}
             <form method="POST">
-            <button type="submit">{{ course[0] }} - {{ course[1] }}</button>
-        </form>
+                <button type="submit">{{ class[0] }} {{ class[1] }}</button>
+            </form>
+        {% else %}
+            <p>no classes!</p>
         {% endfor %}
+        <br/>
+        <a href="/classes/new/course={{ course_id }}">Add a new class</a>
     </div>
+    <br/>
     <div class="card">
-        <h2>Login</h2>
+        <h2>Students</h2>
 
         {% for student in student_list %}
             <form method="POST">
-            <button type="submit" name="test" value="123">{{ course[0] }} - {{ course[1] }}</button>
-        </form>
+                <button type="submit" name="test" value="123">{{ course[0] }} - {{ course[1] }}</button>
+            </form>
+        {% else %}
+            <p>no students!</p>
         {% endfor %}
     </div>
 
