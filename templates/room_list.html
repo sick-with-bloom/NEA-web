@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="card">
+        <h2>Login</h2>
+
+
+
+        <form method="POST">
+            <label>Search by department
+                <select name="department">
+                    {% for department in department_list %}
+                        <option value="{{ department[0] }}">{{ department[1] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Search</button>
+            </label>
+        </form>
+
+        <br/>
+
+        <br/>
+
+        <br/>
+
+        {% for room in room_list %}
+
+            <a href="rooms/room={{ room[0] }}" >
+                <button>{{ room[1].capitalize() }} - Room {{ room[0] }}</button>
+            </a>
+
+            <br/>
+            <br/>
+        {% endfor %}
+    </div>
+
+{% endblock %}

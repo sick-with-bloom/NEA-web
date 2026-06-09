@@ -32,21 +32,46 @@ def courses():
         return redirect(redirect_url)
         #return redirect(url_for("dashboard"))
 
+@app.route("/rooms", methods=["GET","POST"])
+def rooms():
+    if request.method == "GET":
+        from libraries.tools.admin import get_rooms, get_departments
+        room_list = get_rooms()
+        department_list = get_departments()
+        return render_template("room_list.html", room_list = room_list, department_list = department_list)
+    else:
+        department_id = request.form.get("department")
+        return redirect(f"/rooms/department_id={department_id}")
+    #return redirect(url_for("dashboard"))
+
+@app.route("/rooms/department_id=<department_id>",  methods=["GET","POST"])
+def rooms_by_department(department_id):
+    if request.method == "GET":
+        from libraries.tools.admin import get_rooms_by_department, get_departments
+        room_list = get_rooms_by_department(department_id)
+        department_list = get_departments()
+        return render_template("room_list.html", room_list=room_list, department_list=department_list)
+    else:
+        department_id = request.form.get("department")
+        return redirect(f"/rooms/department_id={department_id}")
+
+
 @app.route("/classes/new/course=<course_id>", methods=["GET","POST"])
 def new_class(course_id):
     if request.method == "GET":
-        return render_template("class_new.html", course_id = course_id)
+        from libraries.tools.admin import get_rooms_by_course_id
+        rooms = get_rooms_by_course_id(course_id)
+        return render_template("class_new.html", course_id = course_id, rooms = rooms)
     else:
         block = request.form.get("block")
+        room = request.form.get("room")
 
         from libraries.tools.admin import add_new_class
 
-        add_new_class([block, course_id])
+        add_new_class([block, course_id, room])
 
         redirect_url = f"/courses/id={course_id}"
         return redirect(redirect_url)
-
-
 
 @app.route("/courses/subject=<subject_id>" ,methods = ["POST","GET"])
 def courses_subject(subject_id):

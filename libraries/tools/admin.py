@@ -162,9 +162,49 @@ def get_students_by_course(course_id):
     return students
 
 def add_new_class(class_information):
-    from libraries.tools.database import execute_query_add
+    from libraries.tools.database import execute_query_add, execute_query_one
     block = class_information[0]
     course_id = class_information[1]
+    room_number = class_information[2]
+
     query = ("INSERT INTO class (block, course_id) "
              "VALUES (?, ?)")
     execute_query_add(query, (block, course_id, ))
+
+    query = "SELECT class_id FROM class ORDER BY class_id DESC"
+    class_id = execute_query_one(query, ())[0]
+
+    query = ("INSERT INTO room_booking (room_number, class_id) "
+             "VALUES (?, ?)")
+    execute_query_add(query, (room_number, class_id, ))
+
+def get_rooms_by_course_id(course_id):
+    from libraries.tools.database import  execute_query_all
+    query = ("SELECT * FROM room, department, course, subject "
+             "WHERE room.department_id = department.department_id "
+             "AND course.subject_id = subject.subject_id "
+             "AND subject.department_id = department.department_id "
+             "AND course.course_id = ?")
+    rooms = execute_query_all(query, (course_id, ))
+    return rooms
+
+def get_rooms():
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT room_number, department_name FROM room, department "
+             "WHERE room.department_id = department.department_id")
+    rooms = execute_query_all(query, ())
+    return rooms
+
+def get_rooms_by_department(department_id):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT room_number, department_name FROM room, department "
+             "WHERE room.department_id = department.department_id "
+             "AND department.department_id = ?")
+    rooms = execute_query_all(query, (department_id,))
+    return rooms
+
+def get_departments():
+    from libraries.tools.database import execute_query_all
+    query = "SELECT * FROM department"
+    departments = execute_query_all(query, ())
+    return departments
