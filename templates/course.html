@@ -7,7 +7,8 @@
 
         {% for class in class_list %}
             <form method="POST">
-                <button type="submit">{{ class[0] }} {{ class[1] }}</button>
+                <button type="submit">{{ class[0] }} {{ class[1] }} - {{ class[3] }}</button>
+
             </form>
         {% else %}
             <p>no classes!</p>

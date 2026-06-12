@@ -23,10 +23,19 @@
 
             <label>Room
                 <select name="room">
-                    {% for room in rooms %}
+                    {% for room in room_list %}
                         <option value="{{ room[0] }}">Room {{ room[0] }}</option>
                     {% endfor %}
                 </select>
+            </label>
+
+            <label>Teacher
+                <select name="teacher">
+                    {% for staff in staff_list %}
+                        <option value="{{ staff[0] }}">{{ staff[2] }} {{ staff[1] }}</option>
+                    {% endfor %}
+                </select>
+
             </label>
 
             <button type="submit">Create</button>

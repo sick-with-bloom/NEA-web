@@ -59,16 +59,23 @@ def rooms_by_department(department_id):
 @app.route("/classes/new/course=<course_id>", methods=["GET","POST"])
 def new_class(course_id):
     if request.method == "GET":
-        from libraries.tools.admin import get_rooms_by_course_id
-        rooms = get_rooms_by_course_id(course_id)
-        return render_template("class_new.html", course_id = course_id, rooms = rooms)
+        from libraries.tools.admin import get_rooms_by_course_id, get_staff_by_course_id
+        room_list = get_rooms_by_course_id(course_id)
+        staff_list = get_staff_by_course_id(course_id)
+        return render_template("class_new.html", course_id = course_id, room_list = room_list, staff_list = staff_list)
     else:
         block = request.form.get("block")
         room = request.form.get("room")
+        staff = request.form.get("teacher")
 
         from libraries.tools.admin import add_new_class
 
-        add_new_class([block, course_id, room])
+        result = add_new_class([block, course_id, room, staff])
+
+        if result:
+            print("success")
+        else:
+            print("failed to add class")
 
         redirect_url = f"/courses/id={course_id}"
         return redirect(redirect_url)
@@ -89,6 +96,7 @@ def courses_subject_year(subject_id, year):
 def course(course_id):
     from libraries.tools.admin import get_classes_by_course, get_students_by_course
     class_list = get_classes_by_course(course_id)
+    print(class_list)
     student_list = get_students_by_course(course_id)
     return render_template("course.html", class_list=class_list, student_list=student_list, course_id = course_id)
 

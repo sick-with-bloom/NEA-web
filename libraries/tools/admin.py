@@ -144,11 +144,12 @@ def get_courses_by_subject_id_and_year(subject_id, year):
 
 def get_classes_by_course(course_id):
     from libraries.tools.database import execute_query_all
-    query = ("SELECT subject.subject_name, class.block, course.year "
-             "FROM class, course, subject "
+    query = ("SELECT subject.subject_name, class.block, course.year, teaching.staff_code "
+             "FROM class, course, subject, teaching, staff "
              "WHERE class.course_id = course.course_id "
              "AND course.subject_id = subject.subject_id "
-             "AND course.course_id = ?")
+             "AND course.course_id = ? "
+             "AND class.class_id = teaching.class_id ")
     classes = execute_query_all(query, (course_id, ))
     return classes
 
@@ -166,6 +167,25 @@ def add_new_class(class_information):
     block = class_information[0]
     course_id = class_information[1]
     room_number = class_information[2]
+    staff_code = class_information[3]
+    print(class_information)
+
+    #need to check if there is already a class in the desired room for the desired block
+    query = ("SELECT * FROM room_booking, class "
+             "WHERE room_booking.room_number = ? "
+             "AND class.block = ?")
+    existing_booking = execute_query_one(query, (room_number, block, ))
+    if existing_booking:
+        return False
+
+    #need to check if there is already a class assigned to the teacher for the desired block
+    query = ("SELECT * FROM teaching, class "
+             "WHERE teaching.staff_code = ? "
+             "AND teaching.class_id = class.class_id "
+             "AND class.block = ?")
+    existing_teaching = execute_query_one(query, (staff_code, block, ))
+    if existing_teaching:
+        return False
 
     query = ("INSERT INTO class (block, course_id) "
              "VALUES (?, ?)")
@@ -177,6 +197,13 @@ def add_new_class(class_information):
     query = ("INSERT INTO room_booking (room_number, class_id) "
              "VALUES (?, ?)")
     execute_query_add(query, (room_number, class_id, ))
+
+    query = ("INSERT INTO teaching (staff_code, class_id) "
+             "VALUES (?, ?)")
+    print(staff_code, class_id)
+    execute_query_add(query, (staff_code, class_id, ))
+
+    return True
 
 def get_rooms_by_course_id(course_id):
     from libraries.tools.database import  execute_query_all
@@ -208,3 +235,12 @@ def get_departments():
     query = "SELECT * FROM department"
     departments = execute_query_all(query, ())
     return departments
+
+def get_staff_by_course_id(course_id):
+    from libraries.tools.database import execute_query_all
+    query = ("SELECT staff.staff_code, staff.surname, staff.other_names FROM staff "
+             "JOIN subject ON staff.department_id = subject.department_id "
+             "JOIN course ON course.subject_id = subject.subject_id "
+             "WHERE course.course_id = ?")
+    staff = execute_query_all(query, (course_id, ))
+    return staff
